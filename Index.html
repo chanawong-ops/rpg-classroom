@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>RPG ห้องเรียน — นักเรียน</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700&family=Mitr:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0d0d1a;--bg2:#13132a;--bg3:#1a1a35;--card:#1e1e3a;--card2:#252545;
+  --border:#2e2e5a;--gold:#f0c040;--gold-dim:#a07800;--green:#00e676;
+  --red:#ff5252;--purple:#9c6fe4;--purple2:#b388ff;--cyan:#00e5ff;
+  --text:#e8e8ff;--muted:#7070a0;--shadow:0 4px 24px rgba(0,0,0,.5);--r:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow:hidden;width:100%}
+body{font-family:'Sarabun',sans-serif;color:var(--text);font-size:16px;background:var(--bg);background-image:url('https://lh3.googleusercontent.com/d/1C7aqw5yWt6nJbeCEv5Zli4hMryQddHbl');background-size:cover;background-position:center;}
+body::before{content:'';position:fixed;inset:0;background:rgba(13,13,26,0.82);pointer-events:none;z-index:0}
+.app{position:fixed;inset:0;display:flex;flex-direction:column;z-index:1}
+header{flex-shrink:0;background:linear-gradient(135deg,#1a0a3a,#0d1a3a);border-bottom:1px solid var(--border);height:54px;padding:0 16px;display:flex;align-items:center;box-shadow:0 2px 20px rgba(0,0,0,.6);}
+.header-title{font-family:'Mitr',sans-serif;font-size:16px;font-weight:600;color:var(--gold);letter-spacing:.05em;text-shadow:0 0 20px rgba(240,192,64,.4)}
+.header-sub{font-size:11px;color:var(--muted);margin-top:1px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:16px;margin-bottom:10px;box-shadow:var(--shadow)}
+.card-title{font-family:'Mitr',sans-serif;font-size:14px;font-weight:500;color:var(--purple2);margin-bottom:12px;display:flex;align-items:center;gap:7px}
+.login-label{display:block;font-size:13px;font-weight:600;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.04em}
+.login-input{width:100%;padding:13px 16px;border:1px solid var(--border);border-radius:12px;font-family:'Sarabun',sans-serif;font-size:16px;background:var(--bg3);color:var(--text);min-height:50px;transition:border-color .2s}
+.login-input:focus{outline:none;border-color:var(--purple);box-shadow:0 0 0 3px rgba(156,111,228,.2)}
+.login-input::placeholder{color:var(--muted)}
+.pin-input{text-align:center;letter-spacing:.3em;font-size:20px}
+.btn-login{width:100%;padding:14px;border:1px solid var(--purple);border-radius:12px;background:linear-gradient(135deg,#3d1a6e,#1a3d6e);color:var(--purple2);font-family:'Sarabun',sans-serif;font-size:16px;font-weight:700;cursor:pointer;min-height:52px;transition:all .2s;box-shadow:0 4px 12px rgba(156,111,228,.2)}
+.btn-login:disabled{opacity:.5;cursor:not-allowed}
+.profile-hero{background:linear-gradient(135deg,#1a0a3a 0%,#0a1a3a 50%,#1a0a2a 100%);border:1px solid var(--border);border-radius:var(--r);padding:14px;margin-bottom:8px;position:relative;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,.6);}
+.profile-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 80% 20%,rgba(156,111,228,.15) 0%,transparent 60%);pointer-events:none}
+.char-section{display:flex;gap:12px;align-items:center;margin-bottom:10px}
+.char-left{display:flex;flex-direction:column;align-items:center;gap:6px;flex-shrink:0}
+.char-img{width:84px;height:84px;object-fit:contain;image-rendering:pixelated;filter:drop-shadow(0 0 16px rgba(156,111,228,.5));transition:all .4s}
+.char-gender{display:flex;gap:5px}
+.btn-gender{padding:3px 10px;border-radius:50px;border:1px solid var(--border);background:var(--card2);color:var(--muted);font-family:'Sarabun',sans-serif;font-size:11px;font-weight:600;cursor:pointer;transition:all .2s}
+.btn-gender.active{border-color:var(--purple);color:var(--purple2);background:rgba(156,111,228,.15)}
+.level-badge{width:46px;height:46px;border-radius:10px;flex-shrink:0;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:20px;background:linear-gradient(135deg,#2a1a5a,#1a2a5a);border:2px solid var(--purple);box-shadow:0 0 16px rgba(156,111,228,.4)}
+.level-badge-num{font-family:'Mitr',sans-serif;font-size:9px;font-weight:600;color:var(--purple2);margin-top:1px}
+.profile-right{flex:1;min-width:0}
+.profile-top{display:flex;align-items:center;gap:8px;margin-bottom:3px}
+.profile-name{font-family:'Mitr',sans-serif;font-size:16px;font-weight:600;color:#fff}
+.profile-meta{font-size:11px;color:var(--muted);margin-bottom:5px}
+.profile-title{display:inline-block;font-size:11px;font-weight:700;background:linear-gradient(135deg,rgba(156,111,228,.2),rgba(0,229,255,.1));border:1px solid rgba(156,111,228,.4);border-radius:50px;padding:2px 10px;color:var(--purple2)}
+.xp-bar-wrap{margin-top:8px}
+.xp-bar-labels{display:flex;justify-content:space-between;font-size:11px;margin-bottom:4px}
+.xp-bar-cur{color:var(--gold);font-weight:700}
+.xp-bar-next{color:var(--muted)}
+.xp-bar-track{height:9px;background:rgba(255,255,255,.05);border-radius:50px;overflow:hidden;border:1px solid rgba(255,255,255,.08)}
+.xp-bar-fill{height:100%;border-radius:50px;width:0%;background:linear-gradient(90deg,var(--purple),var(--cyan));transition:width 1s cubic-bezier(.4,0,.2,1);animation:xpGlow 1.5s ease-in-out infinite alternate}
+@keyframes xpGlow{from{box-shadow:0 0 8px rgba(156,111,228,.6)}to{box-shadow:0 0 20px rgba(0,229,255,.8)}}
+.btn-refresh{position:absolute;top:10px;right:10px;background:rgba(156,111,228,.15);border:1px solid rgba(156,111,228,.3);color:var(--purple2);border-radius:50px;padding:4px 10px;font-family:'Sarabun',sans-serif;font-size:11px;font-weight:600;cursor:pointer}
+.stat-row{display:flex;gap:6px;margin-bottom:8px}
+.stat-box{flex:1;background:var(--card2);border:1px solid var(--border);border-radius:12px;padding:10px 6px;text-align:center}
+.stat-num{font-family:'Mitr',sans-serif;font-size:20px;font-weight:600;color:var(--gold)}
+.stat-label{font-size:10px;color:var(--muted);margin-top:2px}
+.tabs{display:flex;gap:4px;margin-bottom:8px;background:var(--card);border:1px solid var(--border);border-radius:50px;padding:4px}
+.tab-btn{flex:1;padding:8px 6px;border:none;background:transparent;border-radius:50px;font-family:'Sarabun',sans-serif;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;transition:all .2s}
+.tab-btn.active{background:linear-gradient(135deg,var(--purple),#5a3aaa);color:#fff;box-shadow:0 2px 12px rgba(156,111,228,.4)}
+.mission-item{border:1px solid var(--border);border-radius:12px;padding:12px;margin-bottom:8px;background:var(--card2)}
+.mission-item.accepted{border-color:rgba(240,192,64,.4);background:rgba(240,192,64,.05)}
+.mission-item.done{border-color:rgba(0,230,118,.4);background:rgba(0,230,118,.05)}
+.mission-item.rejected{border-color:rgba(255,82,82,.4);background:rgba(255,82,82,.05)}
+.mission-top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:6px}
+.mission-name{font-weight:700;font-size:14px;flex:1;color:var(--text)}
+.mission-xp{background:linear-gradient(135deg,#3d2a00,#5a3e00);border:1px solid var(--gold-dim);color:var(--gold);border-radius:50px;padding:3px 10px;font-size:12px;font-weight:700;flex-shrink:0}
+.mission-desc{font-size:12px;color:var(--muted);margin-bottom:8px;line-height:1.5}
+.mission-status{font-size:12px;font-weight:700;margin-bottom:6px;display:flex;align-items:center;gap:6px}
+.status-waiting{color:var(--gold)}.status-done{color:var(--green)}.status-rejected{color:var(--red)}
+.btn-accept{width:100%;padding:11px;border:none;border-radius:10px;background:linear-gradient(135deg,#3d1a6e,#1a3d6e);border:1px solid var(--purple);color:var(--purple2);font-family:'Sarabun',sans-serif;font-size:13px;font-weight:700;cursor:pointer;min-height:44px;transition:all .2s}
+.btn-accept:disabled{opacity:.4;cursor:not-allowed}
+.rec-item{padding:10px 0;border-bottom:1px solid var(--border)}
+.rec-item:last-child{border-bottom:none}
+.rec-top{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.rec-mission{font-weight:600;font-size:13px;flex:1;color:var(--text)}
+.rec-xp{font-family:'Mitr',sans-serif;font-size:14px;font-weight:700;flex-shrink:0}
+.rec-xp.plus{color:var(--green)}.rec-xp.minus{color:var(--red)}
+.rec-meta{font-size:11px;color:var(--muted);margin-top:2px}
+.rank-item{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border)}
+.rank-item:last-child{border-bottom:none}
+.rank-item.me{background:rgba(156,111,228,.1);margin:0 -16px;padding:10px 16px;border-radius:10px;border-bottom:none;border:1px solid rgba(156,111,228,.3)}
+.rank-num{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;flex-shrink:0}
+.rank-num.top{background:linear-gradient(135deg,#5a3e00,#8a6000);color:var(--gold);border:1px solid var(--gold-dim)}
+.rank-num.norm{background:var(--bg3);color:var(--muted);font-size:12px;border:1px solid var(--border)}
+.rank-info{flex:1;min-width:0}
+.rank-name{font-weight:600;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--text)}
+.rank-title-text{font-size:10px;color:var(--muted);margin-top:1px}
+.rank-xp-num{font-family:'Mitr',sans-serif;font-size:16px;font-weight:600;color:var(--gold)}
+.rank-xp-unit{font-size:10px;color:var(--muted);text-align:right}
+.btn-back{display:flex;align-items:center;justify-content:center;gap:6px;padding:12px;border:1px solid var(--border);border-radius:12px;background:var(--card2);color:var(--muted);font-family:'Sarabun',sans-serif;font-size:14px;font-weight:700;cursor:pointer;width:100%;min-height:46px;margin-top:4px}
+.loader{display:flex;align-items:center;gap:8px;padding:14px 4px;color:var(--muted);font-size:14px}
+.spin{width:18px;height:18px;border:2px solid var(--border);border-top-color:var(--purple);border-radius:50%;animation:spin .65s linear infinite;flex-shrink:0}
+@keyframes spin{to{transform:rotate(360deg)}}
+.levelup-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:500;align-items:center;justify-content:center;flex-direction:column}
+.levelup-overlay.show{display:flex;animation:fadeIn .3s}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.levelup-box{text-align:center;animation:popIn .5s cubic-bezier(.175,.885,.32,1.275)}
+@keyframes popIn{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
+.levelup-char{width:140px;height:140px;object-fit:contain;image-rendering:pixelated;margin-bottom:12px;filter:drop-shadow(0 0 24px rgba(240,192,64,.6));animation:float 2s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+.levelup-title{font-family:'Mitr',sans-serif;font-size:32px;font-weight:600;color:var(--gold);text-shadow:0 0 30px rgba(240,192,64,.8);margin-bottom:8px}
+.levelup-sub{font-size:16px;color:var(--purple2);margin-bottom:24px}
+.btn-levelup-ok{padding:14px 40px;border:2px solid var(--gold);border-radius:50px;background:linear-gradient(135deg,#3d2a00,#5a3e00);color:var(--gold);font-family:'Sarabun',sans-serif;font-size:16px;font-weight:700;cursor:pointer}
+#toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--card2);color:var(--text);border:1px solid var(--border);padding:11px 20px;border-radius:50px;font-size:14px;transition:transform .3s;z-index:999;pointer-events:none;white-space:nowrap;max-width:90vw;text-align:center;box-shadow:0 4px 20px rgba(0,0,0,.5)}
+#toast.show{transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <header>
+    <div>
+      <div class="header-title">⚔️ RPG ห้องเรียน</div>
+      <div class="header-sub">เส้นทางแห่งปัญญา</div>
+    </div>
+  </header>
+
+  <!-- หน้า Login -->
+  <div id="page-search" style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:14px 12px 40px">
+    <div style="text-align:center;padding:30px 0 20px">
+      <div style="font-size:60px;margin-bottom:10px;filter:drop-shadow(0 0 20px rgba(156,111,228,.5))">🎮</div>
+      <div style="font-family:'Mitr',sans-serif;font-size:20px;color:var(--text);margin-bottom:4px">ยินดีต้อนรับ นักรบ!</div>
+      <div style="font-size:13px;color:var(--muted)">กรอกรหัสเพื่อเข้าสู่การผจญภัย</div>
+    </div>
+    <div class="card">
+      <div class="card-title">🔐 เข้าสู่ระบบ</div>
+      <div style="margin-bottom:14px">
+        <label class="login-label">รหัสนักเรียน</label>
+        <input type="text" id="login-id" class="login-input" placeholder="กรอกรหัสนักเรียน..." oninput="checkLoginReady()" onkeydown="if(event.key==='Enter')document.getElementById('login-pin').focus()"/>
+      </div>
+      <div style="margin-bottom:18px">
+        <label class="login-label">PIN 4 หลัก</label>
+        <input type="password" id="login-pin" class="login-input pin-input" placeholder="••••" maxlength="4" oninput="checkLoginReady()" onkeydown="if(event.key==='Enter')doLogin()"/>
+      </div>
+      <button id="login-btn" class="btn-login" onclick="doLogin()" disabled>⚔️ เข้าสู่การผจญภัย</button>
+      <div id="login-error" style="display:none;margin-top:10px;text-align:center;font-size:14px;color:var(--red)"></div>
+    </div>
+  </div>
+
+  <!-- หน้า Profile -->
+  <div id="page-profile" style="display:none;flex:1;flex-direction:column;overflow:hidden">
+
+    <!-- ส่วนบน: ไม่เลื่อน -->
+    <div id="profile-fixed" style="flex-shrink:0;padding:10px 12px 0">
+
+      <div class="profile-hero">
+        <button class="btn-refresh" onclick="refreshProfile()">🔄 รีเฟรช</button>
+        <div class="char-section">
+          <div class="char-left">
+            <img id="char-img" class="char-img" src="" alt="character"/>
+            <div class="char-gender">
+              <button class="btn-gender active" id="btn-male" onclick="setGender('male')">⚔️ ชาย</button>
+              <button class="btn-gender" id="btn-female" onclick="setGender('female')">🌸 หญิง</button>
+            </div>
+          </div>
+          <div class="profile-right">
+            <div class="profile-top">
+              <div class="level-badge">
+                <span id="p-badge-icon">🌱</span>
+                <span class="level-badge-num">LV.<span id="p-badge-lv">1</span></span>
+              </div>
+              <div>
+                <div class="profile-name" id="p-name"></div>
+                <div class="profile-meta" id="p-meta"></div>
+              </div>
+            </div>
+            <div class="profile-title" id="p-title"></div>
+            <div class="xp-bar-wrap">
+              <div class="xp-bar-labels">
+                <span class="xp-bar-cur" id="p-prog-cur"></span>
+                <span class="xp-bar-next" id="p-prog-next"></span>
+              </div>
+              <div class="xp-bar-track">
+                <div class="xp-bar-fill" id="p-prog" style="width:0%"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="stat-row">
+        <div class="stat-box"><div class="stat-num" id="p-xp">0</div><div class="stat-label">⭐ XP รวม</div></div>
+        <div class="stat-box"><div class="stat-num" id="p-level">1</div><div class="stat-label">🎯 Level</div></div>
+        <div class="stat-box"><div class="stat-num" id="p-rank">#1</div><div class="stat-label">🏆 อันดับ</div></div>
+      </div>
+
+      <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('mission')">⚔️ Mission</button>
+        <button class="tab-btn" onclick="switchTab('history')">📜 ประวัติ</button>
+        <button class="tab-btn" onclick="switchTab('rank')">🏆 อันดับ</button>
+      </div>
+
+    </div>
+
+    <!-- ส่วนล่าง: scroll ได้ -->
+    <div id="profile-scroll" style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:0 12px 24px">
+
+      <div id="tab-mission">
+        <div id="mission-list"><div class="loader"><div class="spin"></div> กำลังโหลด...</div></div>
+      </div>
+      <div id="tab-history" style="display:none">
+        <div class="card">
+          <div class="card-title">📜 ประวัติ XP</div>
+          <div id="records-list"><div class="loader"><div class="spin"></div> กำลังโหลด...</div></div>
+        </div>
+      </div>
+      <div id="tab-rank" style="display:none">
+        <div class="card">
+          <div class="card-title">🏆 อันดับห้อง</div>
+          <div id="class-rank"><div class="loader"><div class="spin"></div> กำลังโหลด...</div></div>
+        </div>
+      </div>
+
+      <button class="btn-back" onclick="goBack()">← ออกจากการผจญภัย</button>
+
+    </div>
+
+  </div>
+
+</div>
+
+<!-- Level Up -->
+<div class="levelup-overlay" id="levelup-overlay" onclick="closeLevelUp()">
+  <div class="levelup-box">
+    <img id="lu-char" class="levelup-char" src="" alt=""/>
+    <div class="levelup-title">LEVEL UP!</div>
+    <div class="levelup-sub" id="lu-title"></div>
+    <button class="btn-levelup-ok" onclick="closeLevelUp()">✨ ยอดเยี่ยม!</button>
+  </div>
+</div>
+<div id="toast"></div>
+
+<script>
+const LEVEL_DATA=[{level:1,icon:'🌱',title:'ผู้เริ่มต้น'},{level:2,icon:'📖',title:'นักอ่านตัวน้อย'},{level:3,icon:'✏️',title:'จอมคิด'},{level:4,icon:'🔥',title:'นักสู้แห่งปัญญา'},{level:5,icon:'⚡',title:'อัจฉริยะตื่นตัว'},{level:6,icon:'🗡️',title:'นักรบความรู้'},{level:7,icon:'🧙',title:'จอมเวทแห่งห้องเรียน'},{level:8,icon:'🦁',title:'ราชันย์แห่งปัญญา'},{level:9,icon:'🌟',title:'ตำนานห้องเรียน'},{level:10,icon:'👑',title:'เทพแห่งวิชา'}];
+const CHAR_MALE={1:'13pUP64zUXilEmHK-_TxxxZ9O6Eo8INZb',2:'13pUP64zUXilEmHK-_TxxxZ9O6Eo8INZb',3:'12Ugohwv4bai9Btjw3X78ssApuP0X2XDs',4:'12Ugohwv4bai9Btjw3X78ssApuP0X2XDs',5:'1tVUGLZfFweIFSgcXbnkIzUC7MKKdMd1j',6:'1tVUGLZfFweIFSgcXbnkIzUC7MKKdMd1j',7:'190X-B9CIXWwWZnetIwed9B5bbpMo6LwV',8:'190X-B9CIXWwWZnetIwed9B5bbpMo6LwV',9:'1YvjgtgtW1YLZIdXb1hc2ASRt4A-NPH7k',10:'1tSXE8_z893zHyA0HO5dUy7sLZo8eT_sF'};
+const CHAR_FEMALE={1:'1ebGsZUSc3-6HwQjs1AG7scL-g3Y1-TyK',2:'1ebGsZUSc3-6HwQjs1AG7scL-g3Y1-TyK',3:'1xi_yV5rMCvUZeEWm0XvpgYtGv-jkSxzM',4:'1xi_yV5rMCvUZeEWm0XvpgYtGv-jkSxzM',5:'1-rvdYjzRs9jLUdwlfKkLHG8mR6VyOVY4',6:'1-rvdYjzRs9jLUdwlfKkLHG8mR6VyOVY4',7:'1-_6yeFJdoLJh-opYqW-tjfzZYzw-22rB',8:'1-_6yeFJdoLJh-opYqW-tjfzZYzw-22rB',9:'1mVwLrUA4KTHGV39kY6y3YSrMWpQoP1Y8',10:'1MZP1VAmhDXk5-ICAQLCh3CNAz-2gGl69'};
+let currentStu=null,currentGender='male';
+function getLevelIcon(lv){const l=LEVEL_DATA.find(d=>d.level===lv);return l?l.icon:'🌱'}
+function getCharUrl(lv,g){const m=g==='female'?CHAR_FEMALE:CHAR_MALE;return'https://lh3.googleusercontent.com/d/'+(m[lv]||m[1])}
+function setGender(g){currentGender=g;document.getElementById('btn-male').classList.toggle('active',g==='male');document.getElementById('btn-female').classList.toggle('active',g==='female');updateCharacter();}
+function updateCharacter(){document.getElementById('char-img').src=getCharUrl(currentStu?currentStu.level:1,currentGender)}
+function checkLoginReady(){const id=document.getElementById('login-id').value.trim(),pin=document.getElementById('login-pin').value.trim(),btn=document.getElementById('login-btn'),ok=id.length>0&&pin.length===4;btn.disabled=!ok;btn.style.opacity=ok?'1':'0.5';}
+function doLogin(){
+  const id=document.getElementById('login-id').value.trim(),pin=document.getElementById('login-pin').value.trim();
+  if(!id||pin.length!==4)return;
+  const btn=document.getElementById('login-btn'),errBox=document.getElementById('login-error');
+  btn.disabled=true;btn.textContent='⏳ กำลังตรวจสอบ...';errBox.style.display='none';
+  google.script.run
+    .withSuccessHandler(function(d){if(!d)return;currentStu=d;showProfile(d);})
+    .withFailureHandler(function(e){errBox.textContent='❌ '+e.message;errBox.style.display='block';btn.disabled=false;btn.textContent='⚔️ เข้าสู่การผจญภัย';checkLoginReady();})
+    .loginWithPin(id,pin);
+}
+function updateProfileUI(d){
+  const icon=getLevelIcon(d.level);
+  document.getElementById('p-badge-icon').textContent=icon;
+  document.getElementById('p-badge-lv').textContent=d.level;
+  document.getElementById('p-name').textContent=d.fullname;
+  document.getElementById('p-meta').textContent='รหัส '+d.id+' | ชั้น '+d.classRoom;
+  document.getElementById('p-title').textContent=icon+' '+d.title;
+  document.getElementById('p-xp').textContent=d.xp;
+  document.getElementById('p-level').textContent=d.level;
+  document.getElementById('p-rank').textContent='#'+d.rank;
+  document.getElementById('p-prog-cur').textContent='⭐ '+d.xp+' XP';
+  document.getElementById('p-prog-next').textContent=d.nextXP?'ถัดไป '+d.nextXP+' XP':'👑 MAX LEVEL';
+  setTimeout(()=>{document.getElementById('p-prog').style.width=d.progress+'%';},100);
+  updateCharacter();
+}
+function showProfile(d){
+  currentStu=d;
+  document.getElementById('page-search').style.display='none';
+  const pp=document.getElementById('page-profile');
+  pp.style.display='flex';pp.style.flexDirection='column';
+  updateProfileUI(d);
+  loadMissions();loadHistory();loadRank();
+}
+function refreshProfile(){
+  showToast('🔄 กำลังรีเฟรช...');
+  google.script.run
+    .withSuccessHandler(function(d){
+      if(!d)return;const old=currentStu.level;currentStu=d;updateProfileUI(d);
+      if(d.level>old)showLevelUp(d.level,d.title);
+      showToast('✅ อัปเดตแล้ว');loadMissions();loadHistory();loadRank();
+    })
+    .getStudentDetail(currentStu.id);
+}
+function showLevelUp(lv,title){document.getElementById('lu-char').src=getCharUrl(lv,currentGender);document.getElementById('lu-title').textContent='คุณได้เป็น '+title+'!';document.getElementById('levelup-overlay').classList.add('show');}
+function closeLevelUp(){document.getElementById('levelup-overlay').classList.remove('show')}
+function switchTab(tab){
+  ['mission','history','rank'].forEach(t=>document.getElementById('tab-'+t).style.display=t===tab?'block':'none');
+  document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active',['mission','history','rank'][i]===tab));
+  document.getElementById('profile-scroll').scrollTop=0;
+}
+function loadMissions(){
+  document.getElementById('mission-list').innerHTML='<div class="loader"><div class="spin"></div> กำลังโหลด...</div>';
+  google.script.run
+    .withSuccessHandler(renderMissions)
+    .withFailureHandler(e=>{document.getElementById('mission-list').innerHTML='<p style="color:var(--red);padding:10px">❌ '+e.message+'</p>';})
+    .getMissionsForStudent(currentStu.id);
+}
+function renderMissions(data){
+  const box=document.getElementById('mission-list');
+  if(!data||data.length===0){box.innerHTML='<div class="card" style="text-align:center;padding:30px"><div style="font-size:40px;margin-bottom:8px">⚔️</div><div style="color:var(--muted)">ยังไม่มี Mission</div></div>';return;}
+  box.innerHTML=data.map(m=>{
+    const done=m.status==='ผ่าน',waiting=m.status==='รอทำ',rej=m.status==='ไม่ผ่าน';
+    let st='';
+    if(done)st='<div class="mission-status status-done">✅ ผ่านแล้ว ได้รับ XP</div>';
+    else if(waiting)st='<div class="mission-status status-waiting">🕐 รับแล้ว — ไปหาครูเพื่อทำ Mission</div>';
+    else if(rej)st='<div class="mission-status status-rejected">❌ ไม่ผ่าน — รับใหม่ได้</div>';
+    const can=!done&&!waiting;
+    return `<div class="mission-item ${done?'done':waiting?'accepted':rej?'rejected':''}">
+      <div class="mission-top"><div class="mission-name">${m.name}</div><div class="mission-xp">+${m.xp} XP</div></div>
+      ${m.desc?`<div class="mission-desc">${m.desc}</div>`:''}
+      ${m.expire?`<div style="font-size:11px;color:var(--muted);margin-bottom:6px">⏰ หมดอายุ ${m.expire}</div>`:''}
+      ${st}
+      ${can?`<button class="btn-accept" onclick="acceptMission(this,${JSON.stringify(m).replace(/"/g,'&quot;')})">⚔️ รับ Mission (+${m.xp} XP)</button>`:''}
+    </div>`;
+  }).join('');
+}
+function acceptMission(btn,mission){
+  if(typeof mission==='string')mission=JSON.parse(mission);
+  btn.disabled=true;btn.textContent='⏳ กำลังรับ Mission...';
+  google.script.run
+    .withSuccessHandler(function(){showToast('⚔️ รับ Mission แล้ว! ไปหาครูเพื่อทำ Mission');loadMissions();})
+    .withFailureHandler(function(e){showToast('❌ '+e.message);btn.disabled=false;btn.textContent='⚔️ รับ Mission (+'+mission.xp+' XP)';})
+    .acceptMission({studentId:currentStu.id,studentName:currentStu.fullname,classRoom:currentStu.classRoom,missionName:mission.name,xp:mission.xp});
+}
+function loadHistory(){
+  google.script.run
+    .withSuccessHandler(function(data){
+      const box=document.getElementById('records-list');
+      if(!data||data.length===0){box.innerHTML='<p style="color:var(--muted);padding:8px 0">ยังไม่มีประวัติ</p>';return;}
+      box.innerHTML=data.map(r=>`<div class="rec-item"><div class="rec-top"><div class="rec-mission">${r.mission}</div><div class="rec-xp ${r.xp>0?'plus':'minus'}">${r.xp>0?'+':''}${r.xp} XP</div></div><div class="rec-meta">${r.date}${r.teacher?' | ครู '+r.teacher:''}</div></div>`).join('');
+    })
+    .getRecords(currentStu.id);
+}
+function loadRank(){
+  google.script.run
+    .withSuccessHandler(function(data){
+      const box=document.getElementById('class-rank');
+      if(!data||data.length===0){box.innerHTML='<p style="color:var(--muted);padding:8px 0">ยังไม่มีข้อมูล</p>';return;}
+      const medals=['🥇','🥈','🥉'];
+      box.innerHTML=data.map((s,i)=>`<div class="rank-item ${s.id===currentStu.id?'me':''}"><div class="rank-num ${i<3?'top':'norm'}">${i<3?medals[i]:i+1}</div><div class="rank-info"><div class="rank-name">${getLevelIcon(s.level||1)} ${s.fullname}${s.id===currentStu.id?' 👈':''}</div><div class="rank-title-text">${s.title}</div></div><div><div class="rank-xp-num">${s.xp}</div><div class="rank-xp-unit">XP</div></div></div>`).join('');
+    })
+    .getClassRanking(currentStu.classRoom);
+}
+function goBack(){
+  document.getElementById('page-profile').style.display='none';
+  document.getElementById('page-search').style.display='block';
+  document.getElementById('login-id').value='';document.getElementById('login-pin').value='';
+  document.getElementById('login-error').style.display='none';
+  document.getElementById('p-prog').style.width='0%';
+  checkLoginReady();
+}
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000);}
+</script>
+</body>
+</html>
